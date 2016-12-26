@@ -49,7 +49,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         
         recordButton.isEnabled=true
         stopRecordingButton.isEnabled=false
-        r.text="Tap to record"
+        r.text="Tap to Record"
         audioRecorder.stop()
         let audioSession=AVAudioSession.sharedInstance()
         try! audioSession.setActive(false)
@@ -67,7 +67,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if(segue.identifier=="stopRecoding"){
+        if(segue.identifier=="stopRecording"){
           let playSoundsVC=segue.destination as! PlaySoundsViewController
           let recordedAudioURL=sender as! URL
           playSoundsVC.recordedAudioURL=recordedAudioURL
