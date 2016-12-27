@@ -18,16 +18,19 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        stopRecordingButton.isEnabled=false
+    }
+    
+    func setUIState(isRecording:Bool, recordingText:String)
+    {
+        r.text = recordingText
+        stopRecordingButton.isEnabled = isRecording
+        recordButton.isEnabled = !isRecording
     }
 
-
-   
     @IBAction func record(_ sender: UIButton) {
         
-        r.text = "Recording in progress"
-        stopRecordingButton.isEnabled = true
-        recordButton.isEnabled = false
+        setUIState(isRecording: true, recordingText: "Recording in Progress")
         
         let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask, true)[0] as String
         let recordingName = "recordedVoice.wav"
@@ -42,14 +45,10 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         audioRecorder.isMeteringEnabled = true
         audioRecorder.prepareToRecord()
         audioRecorder.record()
-       
     }
 
     @IBAction func stopRecording(_ sender: Any) {
-        
-        recordButton.isEnabled=true
-        stopRecordingButton.isEnabled=false
-        r.text="Tap to Record"
+        setUIState(isRecording: false, recordingText: "Tap to Record")
         audioRecorder.stop()
         let audioSession=AVAudioSession.sharedInstance()
         try! audioSession.setActive(false)
@@ -61,9 +60,9 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
             performSegue(withIdentifier: "stopRecording", sender:audioRecorder.url)
         }
         else{
-            print("recording failed")
-        }
-        
+            let alert = UIAlertController(title: "Alert", message: "Recording Failed", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -74,7 +73,5 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
             
         }
     }
-    
-    
 }
 
